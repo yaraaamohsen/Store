@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    internal class ProductType
+    public class ProductType : BaseEntity<int>
     {
+        public string Name { get; set; }
     }
 }
