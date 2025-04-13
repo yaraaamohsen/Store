@@ -1,12 +1,14 @@
 
+using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Presistance;
 using Presistance.Data;
 
 namespace Store.Owner
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,14 @@ namespace Store.Owner
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            builder.Services.AddScoped<IDbIntializer, DbIntializer>();
+
             var app = builder.Build();
+
+            // Seeding
+            using var scope = app.Services.CreateScope();
+            var dbIntializer = scope.ServiceProvider.GetRequiredService<IDbIntializer>();
+            await dbIntializer.IntializeAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
