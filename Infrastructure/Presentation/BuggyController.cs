@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Components;
+
 
 namespace Presentation
 {
     [ApiController]
-    [Microsoft.AspNetCore.Components.Route("api/[controller]")]
+    [Route("api/[controller]")]
     public class BuggyController : ControllerBase
     {
         [HttpGet("notfound")] // GET : /api/Buggy/notfound
