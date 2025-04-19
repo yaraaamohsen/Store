@@ -3,6 +3,9 @@ using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Presistance;
 using Presistance.Data;
+using Services;
+using Services.Abstractions;
+using AssemblyMapping = Services.AssemblyReference;
 
 namespace Store.Owner
 {
@@ -25,6 +28,9 @@ namespace Store.Owner
             });
 
             builder.Services.AddScoped<IDbIntializer, DbIntializer>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(AssemblyMapping).Assembly);
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
             var app = builder.Build();
 
@@ -44,6 +50,7 @@ namespace Store.Owner
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
 
             app.MapControllers();
 

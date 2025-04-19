@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\Presentation\Presentation.csproj" />
     <ProjectReference Include="..\Infrastructure\Presistance\Presistance.csproj" />
   </ItemGroup>
 

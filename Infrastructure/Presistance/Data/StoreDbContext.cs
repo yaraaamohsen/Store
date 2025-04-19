@@ -23,7 +23,7 @@ namespace Presistance.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyRefrence).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyReference).Assembly);
             base.OnModelCreating(modelBuilder);
         }
     }
