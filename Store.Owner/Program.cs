@@ -5,6 +5,7 @@ using Presistance;
 using Presistance.Data;
 using Services;
 using Services.Abstractions;
+using Store.Owner.Middlewares;
 using AssemblyMapping = Services.AssemblyReference;
 
 namespace Store.Owner
@@ -38,6 +39,8 @@ namespace Store.Owner
             using var scope = app.Services.CreateScope();
             var dbIntializer = scope.ServiceProvider.GetRequiredService<IDbIntializer>();
             await dbIntializer.IntializeAsync();
+
+            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
