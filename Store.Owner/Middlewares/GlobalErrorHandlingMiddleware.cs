@@ -20,6 +20,16 @@ namespace Store.Owner.Middlewares
             try
             {
                 await _next.Invoke(context);
+                if(context.Response.StatusCode == StatusCodes.Status404NotFound)
+                {
+                    context.Response.ContentType = "application/json";
+                    var response = new ErrorDetails()
+                    {
+                        StatusCode = StatusCodes.Status404NotFound,
+                        ErrorMessage = $"End Point {context.Request.Path} Not Found"
+                    };
+                    await context.Response.WriteAsJsonAsync(response);
+                }
             }
             catch (Exception ex)
             {
