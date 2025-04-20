@@ -1,10 +1,13 @@
 
 using Domain.Contracts;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presistance;
 using Presistance.Data;
 using Services;
 using Services.Abstractions;
+using Shared.ErrotModels;
 using Store.Owner.Middlewares;
 using AssemblyMapping = Services.AssemblyReference;
 
@@ -32,6 +35,25 @@ namespace Store.Owner
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(AssemblyMapping).Assembly);
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
+
+            builder.Services.Configure<ApiBehaviorOptions>(config =>
+            {
+                config.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                    var errors = actionContext.ModelState.Where(m => m.Value.Errors.Any())
+                    .Select(m => new ValidationError()
+                    {
+                        Field = m.Key,
+                        Errors = m.Value.Errors.Select(errors => errors.ErrorMessage)
+                    });
+
+                    var response = new ValidationErrorResponse()
+                    {
+                        Errors = errors
+                    };
+                    return new BadRequestObjectResult(response);
+                };
+            });
 
             var app = builder.Build();
 
