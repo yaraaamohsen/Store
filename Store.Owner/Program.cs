@@ -3,6 +3,7 @@ using Domain.Contracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Persistance;
 using Presistance;
 using Presistance.Data;
 using Services;
@@ -26,15 +27,20 @@ namespace Store.Owner
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<StoreDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+            //builder.Services.AddDbContext<StoreDbContext>(options =>
+            //{
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            //});
 
-            builder.Services.AddScoped<IDbIntializer, DbIntializer>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(typeof(AssemblyMapping).Assembly);
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            //builder.Services.AddScoped<IDbIntializer, DbIntializer>();
+            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+
+            //builder.Services.AddAutoMapper(typeof(AssemblyMapping).Assembly);
+            //builder.Services.AddScoped<IServiceManager, ServiceManager>();
+
+            builder.Services.AddApplicationServices();
 
             builder.Services.Configure<ApiBehaviorOptions>(config =>
             {
