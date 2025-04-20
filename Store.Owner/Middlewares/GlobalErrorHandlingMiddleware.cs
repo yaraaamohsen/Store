@@ -1,4 +1,5 @@
-﻿using Shared.ErrotModels;
+﻿using Domain.Exceptions;
+using Shared.ErrotModels;
 
 namespace Store.Owner.Middlewares
 {
@@ -30,15 +31,22 @@ namespace Store.Owner.Middlewares
                 // 4. Response Object
                 // 5. Return Response
 
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                //context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
 
                 var response = new ErrorDetails()
                 {
-                    StatusCode = StatusCodes.Status500InternalServerError,
                     ErrorMessage = ex.Message
                 };
-                
+
+                response.StatusCode = ex switch
+                {
+                    NotFoundException => StatusCodes.Status404NotFound,
+                                    _ => StatusCodes.Status500InternalServerError 
+                };
+
+                context.Response.StatusCode = response.StatusCode;
+
                 await context.Response.WriteAsJsonAsync(response);
             }
         }
