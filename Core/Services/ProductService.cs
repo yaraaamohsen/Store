@@ -6,6 +6,7 @@ using System.Text.Unicode;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Services.Abstractions;
 using Services.Specifications;
@@ -30,11 +31,11 @@ namespace Services
             return new PaginationResponse<ProductDto>(specParams.PageIndex, specParams.PageSize, count, result);
         }
 
-        public async Task<ProductDto> GetProductByIdAsync(int id)
+        public async Task<ProductDto?> GetProductByIdAsync(int id)
         {
             var spec = new ProductsWithBrandsAndTypesSpecifications(id);
             var product = await unitOfWork.GetRepository<Product,int>().GetByIdAsync(spec);
-            if (product is null ) return null;
+            if (product is null ) throw new ProductNotFoundException(id);
             var result = mapper.Map<ProductDto>(product);
             return result;
         }
