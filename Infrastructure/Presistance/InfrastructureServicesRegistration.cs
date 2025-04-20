@@ -9,6 +9,8 @@ using Presistance.Data;
 using Presistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Persistance.Repositories;
+using StackExchange.Redis;
 
 namespace Persistance
 {
@@ -23,6 +25,10 @@ namespace Persistance
 
             services.AddScoped<IDbIntializer, DbIntializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
+            {
+                return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
+            } );
             return services;
         }
     }
