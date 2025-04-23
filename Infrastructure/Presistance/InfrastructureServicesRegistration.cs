@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Contracts;
-using Microsoft.Extensions.DependencyInjection;
-using Presistance.Data;
-using Presistance;
+﻿using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Persistance.Repositories;
+using Presistance;
+using Presistance.Data;
 using StackExchange.Redis;
 
 namespace Persistance
@@ -26,10 +21,11 @@ namespace Persistance
             services.AddScoped<IDbIntializer, DbIntializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<ICacheRepository, CacheRepository>();
             services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
             {
                 return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
-            } );
+            });
             return services;
         }
     }
