@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Services;
+﻿using Domain.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Persistance;
+using Persistance.Identity;
+using Services;
 using Shared.ErrotModels;
 
 namespace Store.Owner.Extensions
@@ -15,13 +18,15 @@ namespace Store.Owner.Extensions
 
             services.AddInfrastructureServices(configuration);
 
+            services.AddIdentityServices();
+
             services.AddApplicationServices();
 
             services.ConfigureServices();
 
             return services;
         }
-        
+
         private static IServiceCollection AddBuiltInServices(this IServiceCollection services)
         {
             // Add services to the container.
@@ -57,6 +62,13 @@ namespace Store.Owner.Extensions
                 };
             });
 
+            return services;
+        }
+
+        private static IServiceCollection AddIdentityServices(this IServiceCollection services)
+        {
+            services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<StoreIdentityDbContext>();
             return services;
         }
     }
