@@ -14,13 +14,13 @@ namespace Store.Owner.Middlewares
             _next = next;
             _logger = logger;
         }
-        
+
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
                 await _next.Invoke(context);
-                if(context.Response.StatusCode == StatusCodes.Status404NotFound)
+                if (context.Response.StatusCode == StatusCodes.Status404NotFound)
                 {
                     await HandlingNotFoundEndPointAsync(context);
                 }
@@ -53,6 +53,8 @@ namespace Store.Owner.Middlewares
             {
                 NotFoundException => StatusCodes.Status404NotFound,
                 BadRequestException => StatusCodes.Status400BadRequest,
+                ValidationException => StatusCodes.Status400BadRequest,
+                UnauthorizedAccessException => HandlingValidationException((ValidationException)ex, response),
                 _ => StatusCodes.Status500InternalServerError
             };
 
@@ -70,6 +72,12 @@ namespace Store.Owner.Middlewares
                 ErrorMessage = $"End Point {context.Request.Path} Not Found"
             };
             await context.Response.WriteAsJsonAsync(response);
+        }
+
+        private static int HandlingValidationException(ValidationException ex, ErrorDetails response)
+        {
+            response.Errors = ex.Errors;
+            return StatusCodes.Status400BadRequest;
         }
     }
 }
