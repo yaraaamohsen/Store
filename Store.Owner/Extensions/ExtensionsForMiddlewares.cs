@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Services;
-using Persistance;
-using Shared.ErrotModels;
-using Domain.Contracts;
+﻿using Domain.Contracts;
 using Store.Owner.Middlewares;
 
 namespace Store.Owner.Extensions
@@ -39,10 +35,11 @@ namespace Store.Owner.Extensions
             using var scope = app.Services.CreateScope();
             var dbIntializer = scope.ServiceProvider.GetRequiredService<IDbIntializer>();
             await dbIntializer.IntializeAsync();
+            await dbIntializer.IntializeIdentityAsync();
 
             return app;
         }
-        
+
         private static WebApplication UseGlobalErrorHandling(this WebApplication app)
         {
             app.UseMiddleware<GlobalErrorHandlingMiddleware>();
