@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using Domain.Contracts;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +66,7 @@ namespace Presistance
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }
